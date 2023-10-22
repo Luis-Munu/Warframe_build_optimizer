@@ -25,8 +25,8 @@ class Build:
         Initializes a new Build object with default values.
         """
         self.mods = []
-        self.mod_pool = config.mod_database.copy()
-        self.unique_mod_names = {key: False for key in config.unique_mod_names}
+        self.mod_pool = config.MOD_DATABASE.copy()
+        self.unique_mod_names = {key: False for key in config.UNIQUE_MOD_NAMES}
         
         self.used_mods = 0
         self.total_used_mods = 0
@@ -44,9 +44,9 @@ class Build:
         Returns:
         - modded_stats (dict): The updated modded stats of the Warframe.
         """
-        modded_stats = {stat: self.config.base_stats[stat] for stat in self.config.base_stats}
+        modded_stats = {stat: self.config.BASE_STATS[stat] for stat in self.config.BASE_STATS}
         for mod in self.mods:
-            modded_stats = {stat: modded_stats[stat] + mod[stat] for stat in self.config.base_stats}
+            modded_stats = {stat: modded_stats[stat] + mod[stat] for stat in self.config.BASE_STATS}
         return modded_stats
     
     def evaluate_stats(self):
@@ -56,7 +56,7 @@ class Build:
         Returns:
         - stat_distance (int): The difference between the modded stats and the goal stats.
         """
-        return sum([max(0, self.config.goal_stats[stat] - self.modded_stats[stat]) for stat in self.config.goal_stats])
+        return sum([max(0, self.config.GOAL_STATS[stat] - self.modded_stats[stat]) for stat in self.config.GOAL_STATS])
     
     def add_mod(self, mod):
         """
@@ -142,12 +142,12 @@ class Build:
             self.mod_pool = pool_cache[tuple([hash(mod["name"]) for mod in self.mods])].copy()
             return
         
-        total_mods = self.config.mod_database.copy()
+        total_mods = self.config.MOD_DATABASE.copy()
         self.mod_pool = []
         
         # based on the stats we want to achieve, remove all mods that are no longer useful (for example if a goal stat has already been achieved)
-        for stat in self.config.goal_stats:
-            if self.modded_stats[stat] < self.config.goal_stats[stat]:
+        for stat in self.config.GOAL_STATS:
+            if self.modded_stats[stat] < self.config.GOAL_STATS[stat]:
                 self.mod_pool.extend([mod for mod in total_mods if mod[stat] != 0.0 or mod["type"] == 1])
                 
         # remove mods that are already in the build

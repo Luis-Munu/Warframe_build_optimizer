@@ -19,12 +19,12 @@ class GreedyBuild:
                      
         self.used_aura = not self.config.AURA_SLOT_FREE
         self.used_exilus = not self.config.EXILUS_SLOT_FREE
-        self.unique_mod_names_used = {key: False for key in self.config.unique_mod_names}
+        self.unique_mod_names_used = {key: False for key in self.config.UNIQUE_MOD_NAMES}
         self.mod_names = []
         self.used_mods = []
         self.sdnumber = 0
         self.capacity = 0
-        self.stats = self.config.base_stats.copy()      
+        self.stats = self.config.BASE_STATS.copy()      
         
     def can_add_mod(self, mod):
         """
@@ -109,7 +109,7 @@ class GreedyBuild:
             self.sdnumber -= 1
             
     def calculate_score(self):
-        sc = sum([max(0, self.config.goal_stats[stat] - self.stats[stat]) for stat in self.config.goal_stats])
+        sc = sum([max(0, self.config.GOAL_STATS[stat] - self.stats[stat]) for stat in self.config.GOAL_STATS])
         if sc != 0:
             return 1/sc
         else:
@@ -199,9 +199,9 @@ class GreedyBuild:
         """
         Calculates the modded stats of this build based on its stats and the used mods multiplier.
         """
-        modded_stats = {stat: self.config.base_stats[stat] for stat in self.config.base_stats}
+        modded_stats = {stat: self.config.BASE_STATS[stat] for stat in self.config.BASE_STATS}
         for mod in self.used_mods if modx == None else self.used_mods + [modx]:
-            modded_stats = {stat: modded_stats[stat] + mod[stat] for stat in self.config.base_stats}
+            modded_stats = {stat: modded_stats[stat] + mod[stat] for stat in self.config.BASE_STATS}
         return modded_stats
 
                 
